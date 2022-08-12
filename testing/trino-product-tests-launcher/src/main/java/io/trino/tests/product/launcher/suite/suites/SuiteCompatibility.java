@@ -60,10 +60,16 @@ public class SuiteCompatibility
                         .withGroups("configured_features", "hive_view_compatibility")
                         .build())
                 .collect(toImmutableList());
+        ImmutableList<SuiteTestRun> trinoIcebergCompatibilityTestRuns = testedPrestoDockerImages().stream()
+                .map(image -> testOnEnvironment(EnvSinglenodeCompatibility.class, ImmutableMap.of("compatibility.testDockerImage", image))
+                        .withGroups("configured_features", "iceberg_format_version_compatibility")
+                        .build())
+                .collect(toImmutableList());
 
         return ImmutableList.<SuiteTestRun>builder()
                 .addAll(trinoCompatibilityTestRuns)
                 .addAll(prestoCompatibilityTestRuns)
+                .addAll(trinoIcebergCompatibilityTestRuns)
                 .build();
     }
 
